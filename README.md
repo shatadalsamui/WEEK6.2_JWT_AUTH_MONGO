@@ -45,6 +45,4 @@ The server will start and serve the frontend from the `public/` directory.
 - `jwt(off).js` may contain alternative or disabled JWT logic for reference.
 - This project is for educational purposes and does not include production-level security or error handling.
 
-## License
-MIT
 
