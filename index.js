@@ -1,4 +1,5 @@
 const express = require("express"); // Import the Express framework
+
 const jwt = require("jsonwebtoken"); // Import the JSON Web Token library for authentication
 
 const JWT_SECRET = "kirat123123"; // Secret key used to sign and verify JWTs
@@ -19,34 +20,34 @@ app.use(express.static("public"));
 
 // Route to handle user signup
 app.post("/signup", logger, function (req, res) {
-    const { username, password } = req.body; // Extract username and password from the request body
+    const {username, password} = req.body; // Extract username and password from the request body
 
     // Check if the user already exists in the `users` array
     const existingUser = users.find(user => user.username === username);
     if (existingUser) {
-        return res.json({ message: "Username already exists" }); // Return error if user exists
+        return res.json({message: "Username already exists"}); // Return error if user exists
     }
 
-    users.push({ username, password }); // Add the new user to the `users` array
+    users.push({username, password}); // Add the new user to the `users` array
 
-    res.json({ message: "You are signed up" }); // Return success message
+    res.json({message: "You are signed up"}); // Return success message
 });
 
 // Route to handle user signin
 app.post("/signin", logger, function (req, res) {
-    const { username, password } = req.body; // Extract username and password from the request body
+    const {username, password} = req.body; // Extract username and password from the request body
 
     // Find the user in the `users` array with matching credentials
     const foundUser = users.find(user => user.username === username && user.password === password);
 
     if (!foundUser) {
-        return res.json({ message: "Credentials incorrect" }); // Return error if credentials are invalid
+        return res.json({message: "Credentials incorrect"}); // Return error if credentials are invalid
     }
 
     // Generate a JWT token with the user's username as the payload
-    const token = jwt.sign({ username: foundUser.username }, JWT_SECRET);
+    const token = jwt.sign({username: foundUser.username}, JWT_SECRET);
 
-    res.json({ token }); // Return the generated token
+    res.json({token}); // Return the generated token
 });
 
 // Middleware to authenticate requests using JWT
@@ -54,7 +55,7 @@ function auth(req, res, next) {
     const token = req.headers.token; // Extract the token from the request headers
 
     if (!token) {
-        return res.json({ message: "You are not logged in" }); // Return error if no token is provided
+        return res.json({message: "You are not logged in"}); // Return error if no token is provided
     }
 
     try {
@@ -63,7 +64,7 @@ function auth(req, res, next) {
         req.username = decodedData.username; // Attach the decoded username to the request object
         next(); // Pass control to the next middleware or route handler
     } catch (error) {
-        return res.json({ message: "Invalid token" }); // Return error if the token is invalid
+        return res.json({message: "Invalid token"}); // Return error if the token is invalid
     }
 }
 
@@ -73,11 +74,11 @@ app.get("/me", logger, auth, function (req, res) {
     const foundUser = users.find(user => user.username === req.username);
 
     if (!foundUser) {
-        return res.json({ message: "User not found" }); // Return error if the user is not found
+        return res.json({message: "User not found"}); // Return error if the user is not found
     }
 
     // Return the user's details (username and password)
-    res.json({ username: foundUser.username, password: foundUser.password });
+    res.json({username: foundUser.username, password: foundUser.password});
 });
 
 // Start the server and listen on port 3000
